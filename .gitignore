@@ -1,0 +1,15 @@
+# DealLens — gitignore
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+node_modules/
+dist/
+.DS_Store
+*.egg-info/
+.pytest_cache/

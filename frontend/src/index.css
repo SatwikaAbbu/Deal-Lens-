@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    font-feature-settings: "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    font-family: 'Geist Sans', 'Inter', system-ui, sans-serif;
+    background-color: #08090a;
+    background-image:
+      radial-gradient(circle at 50% -20%, #1a1b1e 0%, #08090a 50%),
+      radial-gradient(circle at 0% 100%, #0c0d0f 0%, #08090a 40%);
+    background-attachment: fixed;
+    color: theme('colors.text-secondary');
+    min-height: 100vh;
+  }
+
+  .font-mono {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+  }
+}
+
+@layer utilities {
+  .shadow-card {
+    box-shadow:
+      0px 0px 0px 1px rgba(255, 255, 255, 0.06),
+      0px 2px 4px rgba(0, 0, 0, 0.3),
+      0px 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .shadow-card-hover {
+    box-shadow:
+      0px 0px 0px 1px rgba(255, 255, 255, 0.10),
+      0px 4px 8px rgba(0, 0, 0, 0.4),
+      0px 12px 24px rgba(0, 0, 0, 0.25);
+  }
+
+  .glass-panel {
+    @apply bg-bg-panel/80 backdrop-blur-xl border-r border-white/5;
+  }
+}
