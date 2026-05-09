@@ -40,6 +40,13 @@ export async function updateDealStatus(dealId, status) {
   return response.data;
 }
 
+// ── Delete deal ───────────────────────────────────────────────────────────────
+
+export async function deleteDeal(dealId) {
+  const response = await axios.delete(`${API_URL}/deals/${dealId}`);
+  return response.data;
+}
+
 // ── Run full analysis on a deal ───────────────────────────────────────────────
 
 export async function analyseFullDeal(reportId) {

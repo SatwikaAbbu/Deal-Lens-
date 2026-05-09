@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from db.supabase_client import (
     get_all_deals,
     update_report_status,
+    delete_report,
     get_preferences,
     save_preferences,
 )
@@ -49,6 +50,20 @@ async def update_deal_status(deal_id: str, body: StatusUpdate):
     
     logger.info(f"[dashboard] Deal {deal_id} status updated to '{body.status}'")
     return {"success": True, "deal_id": deal_id, "status": body.status}
+
+# ── DELETE /deals/{deal_id} ───────────────────────────────────────────────────
+
+@router.delete("/deals/{deal_id}")
+async def remove_deal(deal_id: str):
+    """
+    Permanently deletes a deal from the database.
+    """
+    success = await delete_report(deal_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Deal not found or could not be deleted.")
+    
+    logger.info(f"[dashboard] Deal {deal_id} permanently deleted")
+    return {"success": True, "deal_id": deal_id}
 
 
 # ── GET /preferences ──────────────────────────────────────────────────────────

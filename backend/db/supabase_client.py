@@ -149,6 +149,11 @@ def _update_report_data_sync(report_id: str, updates: dict) -> bool:
     )
     return bool(response.data)
 
+def _delete_report_sync(report_id: str) -> bool:
+    if not _sb:
+        raise RuntimeError("Supabase client not initialized.")
+    response = _sb.table("analyses").delete().eq("id", report_id).execute()
+    return True # Delete returns empty data usually if successful
 
 # ── Preferences CRUD ──────────────────────────────────────────────────────────
 
@@ -277,3 +282,12 @@ async def save_preferences(interested: list[str], disqualified: list[str]) -> di
     except Exception as e:
         logger.error(f"[supabase] Failed to save preferences: {e}")
         raise
+
+async def delete_report(report_id: str) -> bool:
+    if not _is_valid_uuid(report_id):
+        return False
+    try:
+        return await asyncio.to_thread(_delete_report_sync, report_id)
+    except Exception as e:
+        logger.error(f"[supabase] Failed to delete report {report_id}: {e}")
+        return False
