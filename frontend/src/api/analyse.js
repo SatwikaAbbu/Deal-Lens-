@@ -1,13 +1,10 @@
 import axios from 'axios';
 
-let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+let API_URL = import.meta.env.VITE_API_URL || '';
 
-// If we are NOT on the Vite dev server (port 5173), we are being served by FastAPI or Ngrok.
-// In that case, we must use relative paths so the request routes to the same server.
-if (window.location.port !== '5173' && window.location.hostname !== 'localhost') {
-  API_URL = '';
-} else if (window.location.port !== '5173') {
-  API_URL = '';
+if (!API_URL) {
+  // Fallback if VITE_API_URL is not set
+  API_URL = window.location.port === '5173' ? 'http://localhost:8000' : '';
 }
 
 export async function analyseDeck(file) {
