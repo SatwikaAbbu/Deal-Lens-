@@ -285,16 +285,14 @@ export default function DashboardPage() {
   };
 
   // Compute stats
-  const inboxCount = deals.filter((d) => !d.status || d.status === 'inbox' || d.status === 'pending').length;
   const favouriteCount = deals.filter((d) => d.status === 'favourite').length;
   const acceptedCount = deals.filter((d) => d.status === 'accepted').length;
   const rejectedCount = deals.filter((d) => d.status === 'rejected').length;
   const disqualifiedCount = deals.filter((d) => d.status === 'disqualified').length;
-
-  const totalCalculated = inboxCount + favouriteCount + acceptedCount + rejectedCount + disqualifiedCount;
+  const inboxCount = deals.length - (favouriteCount + acceptedCount + rejectedCount + disqualifiedCount);
 
   const stats = {
-    total: totalCalculated,
+    total: deals.length,
     inbox: inboxCount,
     favourite: favouriteCount,
     accepted: acceptedCount,
@@ -305,7 +303,7 @@ export default function DashboardPage() {
   // Filter deals
   const filteredDeals = deals.filter((d) => {
     if (activeView === 'all') return true;
-    if (activeView === 'inbox') return !d.status || d.status === 'inbox' || d.status === 'pending';
+    if (activeView === 'inbox') return d.status !== 'favourite' && d.status !== 'accepted' && d.status !== 'rejected' && d.status !== 'disqualified';
     return d.status === activeView;
   });
 

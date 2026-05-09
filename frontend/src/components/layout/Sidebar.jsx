@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 /**
  * Main navigation sidebar.
@@ -17,9 +18,9 @@ export default function Sidebar({ active, onNavigate, filename = 'deck.pdf' }) {
     <aside className="fixed left-0 top-0 h-full w-56 glass-panel flex flex-col z-40">
       {/* Brand */}
       <div className="px-5 py-4 border-b border-white/5">
-        <span className="text-base font-sans font-semibold text-text-primary">
+        <Link to="/" className="text-base font-sans font-semibold text-text-primary hover:text-accent-light transition-colors block">
           Deal<span className="text-accent-light">Lens</span>
-        </span>
+        </Link>
       </div>
 
       {/* Nav items */}
