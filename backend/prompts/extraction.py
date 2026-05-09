@@ -7,7 +7,8 @@ Return ONLY valid JSON. No explanation. No markdown code blocks.
 Required JSON structure:
 {
   "startup_name": "string",
-  "category": "string",
+  "category": "string (e.g. EdTech, FinTech, HealthTech, QuickCommerce, SaaS, AgriTech, CleanTech, Crypto, AI/ML, Logistics, FoodTech, Gaming, MediaTech, InsurTech, PropTech, HRTech, LegalTech, TravelTech, D2C, Marketplace, Other)",
+  "short_description": "string — 1-2 sentence summary of what the startup does and its value proposition",
   "context_year": "string (YYYY) or null if not explicitly found",
   "founders": [{"name": "string", "role": "string", "background": "string"}],
   "market_claims": [{"claim": "string", "slide": "number", "number_mentioned": "string"}],

@@ -5,9 +5,9 @@ from services.gemini_client import call_gemini, parse_json
 
 logger = logging.getLogger(__name__)
 
-async def test_founder(founders: list[dict], crunchbase_data: list[dict], tavily_data: list[dict], context: dict = None) -> dict:
+async def test_founder(founders: list[dict], crunchbase_data: list[dict], apollo_data: list[dict], tavily_data: list[dict], context: dict = None) -> dict:
     """
-    Evaluates founder domain expertise using Crunchbase and Tavily data.
+    Evaluates founder domain expertise using Apollo, Crunchbase, and Tavily data.
     Returns the domain fit JSON structure.
     """
     if not founders:
@@ -19,6 +19,9 @@ async def test_founder(founders: list[dict], crunchbase_data: list[dict], tavily
     # Format the prompt context
     user_prompt = "FOUNDER DETAILS FROM PITCH DECK:\n"
     user_prompt += json.dumps(founders, indent=2) + "\n\n"
+    
+    user_prompt += "PROFESSIONAL HISTORY (Apollo.io):\n"
+    user_prompt += json.dumps(apollo_data, indent=2) + "\n\n"
     
     user_prompt += "CRUNCHBASE DATA:\n"
     user_prompt += json.dumps(crunchbase_data, indent=2) + "\n\n"

@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from routers.analyse import router
+from routers.dashboard import router as dashboard_router
 import os
 
 app = FastAPI(title="DealLens API", version="2.0.0")
@@ -18,6 +19,7 @@ app.add_middleware(
 )
 
 app.include_router(router)
+app.include_router(dashboard_router)
 
 @app.get("/health")
 async def health():

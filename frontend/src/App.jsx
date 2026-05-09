@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-rout
 import UploadPage from './pages/UploadPage';
 import LoadingPage from './pages/LoadingPage';
 import ReportPage from './pages/ReportPage';
+import SubmitPage from './pages/SubmitPage';
+import DashboardPage from './pages/DashboardPage';
 import NotFound from './pages/NotFound';
 import { analyseDeck, getReport } from './api/analyse';
 
@@ -54,6 +56,8 @@ function DealLensFlow() {
   return (
     <Routes>
       <Route path="/" element={<UploadPage onUpload={handleUpload} error={uploadError} />} />
+      <Route path="/submit" element={<SubmitPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/loading" element={<LoadingPage currentStep={currentStep} />} />
       <Route 
         path="/report/:id" 

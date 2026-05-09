@@ -42,4 +42,242 @@
   .glass-panel {
     @apply bg-bg-panel/80 backdrop-blur-xl border-r border-white/5;
   }
+
+  /* ── Glass Sidebar ── */
+  .glass-sidebar {
+    background: linear-gradient(180deg, rgba(15,16,17,0.95) 0%, rgba(8,9,10,0.98) 100%);
+    backdrop-filter: blur(24px) saturate(1.2);
+    border-right: 1px solid rgba(255,255,255,0.04);
+  }
+
+  /* ── Score Ring ── */
+  .score-ring-track {
+    stroke: #1f2023;
+    fill: none;
+  }
+  .score-ring-fill {
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ── Premium Deal Card ── */
+  .deal-card {
+    position: relative;
+    background: linear-gradient(145deg, #191a1b 0%, #141516 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+  .deal-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    opacity: 0;
+    background: linear-gradient(135deg, rgba(113,112,255,0.04) 0%, transparent 60%);
+    transition: opacity 0.3s ease;
+  }
+  .deal-card:hover {
+    border-color: rgba(255,255,255,0.10);
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.08),
+      0 8px 24px rgba(0,0,0,0.35),
+      0 0 40px rgba(113,112,255,0.04);
+  }
+  .deal-card:hover::before {
+    opacity: 1;
+  }
+
+  /* ── Stat Card Glow ── */
+  .stat-card {
+    position: relative;
+    background: linear-gradient(145deg, #191a1b 0%, #141516 100%);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 16px 20px;
+    transition: all 0.25s ease;
+    overflow: hidden;
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    border-radius: 14px 14px 0 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .stat-card:hover::after {
+    opacity: 1;
+  }
+  .stat-card:hover {
+    border-color: rgba(255,255,255,0.10);
+    transform: translateY(-1px);
+  }
+  .stat-card.active {
+    border-color: rgba(113,112,255,0.2);
+    background: linear-gradient(145deg, rgba(94,106,210,0.06) 0%, #141516 100%);
+  }
+  .stat-card.active::after {
+    opacity: 1;
+    background: linear-gradient(90deg, #5e6ad2, #7170ff);
+  }
+
+  /* Stat glow variants */
+  .stat-glow-inbox::after { background: linear-gradient(90deg, #5b9cf6, #7cb3f8); }
+  .stat-glow-favourite::after { background: linear-gradient(90deg, #f5a623, #f7c948); }
+  .stat-glow-accepted::after { background: linear-gradient(90deg, #2ac26a, #34d97b); }
+  .stat-glow-rejected::after { background: linear-gradient(90deg, #e24b4a, #f06560); }
+  .stat-glow-disqualified::after { background: linear-gradient(90deg, #8a5200, #c77800); }
+
+  /* ── Sidebar Nav Item ── */
+  .nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #8a8f98;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .nav-item:hover {
+    color: #d0d6e0;
+    background: rgba(255,255,255,0.03);
+  }
+  .nav-item.active {
+    color: #7170ff;
+    background: rgba(94,106,210,0.08);
+  }
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    background: linear-gradient(180deg, #5e6ad2, #7170ff);
+    border-radius: 0 3px 3px 0;
+  }
+
+  /* ── Action Button Styles ── */
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+    border: 1px solid;
+    cursor: pointer;
+  }
+  .action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .action-btn-accept {
+    color: #2ac26a;
+    background: rgba(13,43,30,0.6);
+    border-color: rgba(26,107,60,0.3);
+  }
+  .action-btn-accept:hover:not(:disabled) {
+    background: rgba(13,43,30,0.9);
+    box-shadow: 0 0 16px rgba(42,194,106,0.15);
+  }
+  .action-btn-reject {
+    color: #e24b4a;
+    background: rgba(43,13,13,0.6);
+    border-color: rgba(138,26,26,0.3);
+  }
+  .action-btn-reject:hover:not(:disabled) {
+    background: rgba(43,13,13,0.9);
+    box-shadow: 0 0 16px rgba(226,75,74,0.15);
+  }
+  .action-btn-favourite {
+    color: #f5a623;
+    background: rgba(42,31,8,0.6);
+    border-color: rgba(138,82,0,0.3);
+  }
+  .action-btn-favourite:hover:not(:disabled) {
+    background: rgba(42,31,8,0.9);
+    box-shadow: 0 0 16px rgba(245,166,35,0.15);
+  }
+  .action-btn-disqualified {
+    color: #fca5a5;
+    background: rgba(43,13,13,0.4);
+    border-color: rgba(138,26,26,0.2);
+  }
+  .action-btn-disqualified:hover:not(:disabled) {
+    background: rgba(43,13,13,0.7);
+    box-shadow: 0 0 16px rgba(226,75,74,0.1);
+  }
+  .action-btn-primary {
+    color: #b8bbff;
+    background: linear-gradient(135deg, rgba(94,106,210,0.15) 0%, rgba(113,112,255,0.08) 100%);
+    border-color: rgba(113,112,255,0.2);
+  }
+  .action-btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(94,106,210,0.25) 0%, rgba(113,112,255,0.15) 100%);
+    box-shadow: 0 0 20px rgba(113,112,255,0.15);
+    color: #fff;
+  }
+
+  /* ── Stagger Delays ── */
+  .stagger-1 { animation-delay: 50ms; }
+  .stagger-2 { animation-delay: 100ms; }
+  .stagger-3 { animation-delay: 150ms; }
+  .stagger-4 { animation-delay: 200ms; }
+  .stagger-5 { animation-delay: 250ms; }
+  .stagger-6 { animation-delay: 300ms; }
+  .stagger-7 { animation-delay: 350ms; }
+  .stagger-8 { animation-delay: 400ms; }
+
+  /* ── Custom Scrollbar ── */
+  .custom-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+  }
+  .custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.15);
+  }
+
+  /* ── Category Badge ── */
+  .category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid;
+  }
 }

@@ -114,6 +114,14 @@ export default {
           '0%, 100%': { boxShadow: '0 0 0 rgba(113,112,255,0.0)' },
           '50%': { boxShadow: '0 0 28px rgba(113,112,255,0.22)' },
         },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.92)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        slideInLeft: {
+          '0%': { opacity: '0', transform: 'translateX(-16px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
       },
       animation: {
         shimmer: 'shimmer 1.5s infinite',
@@ -128,6 +136,8 @@ export default {
         floatSlow: 'floatSlow 5.5s ease-in-out infinite',
         floatTilt: 'floatTilt 6.5s ease-in-out infinite',
         pulseGlow: 'pulseGlow 3s ease-in-out infinite',
+        scaleIn: 'scaleIn 0.4s cubic-bezier(0.2, 0.9, 0.2, 1) both',
+        slideInLeft: 'slideInLeft 0.4s cubic-bezier(0.2, 0.9, 0.2, 1) both',
       }
     },
   },
