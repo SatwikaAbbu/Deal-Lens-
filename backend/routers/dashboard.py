@@ -114,3 +114,32 @@ async def save_investor_preferences(body: PreferencesUpdate):
                 logger.info(f"[dashboard] Retroactively updated deal {deal['id']} from {old_status} to {new_status}")
                 
     return {"success": True, "preferences": result}
+
+
+# ── POST /deals/{deal_id}/invite ──────────────────────────────────────────────
+
+@router.post("/deals/{deal_id}/invite")
+async def send_meeting_invite_endpoint(deal_id: str):
+    """
+    Sends a meeting invite email to the founder of a specific deal.
+    Looks up founder_email and startup_name from the database.
+    """
+    from db.supabase_client import get_full_record
+    from services.email_service import send_meeting_invite
+
+    record = await get_full_record(deal_id)
+    if not record:
+        raise HTTPException(status_code=404, detail="Deal not found.")
+
+    founder_email = record.get("founder_email")
+    startup_name = record.get("startup_name", "Your Startup")
+
+    if not founder_email:
+        raise HTTPException(status_code=422, detail="No founder email found for this deal.")
+
+    success = await send_meeting_invite(founder_email, startup_name)
+    if not success:
+        raise HTTPException(status_code=500, detail="Failed to send meeting invite. Check SMTP settings.")
+
+    logger.info(f"[dashboard] Meeting invite sent to {founder_email} for deal {deal_id}")
+    return {"success": True, "deal_id": deal_id, "sent_to": founder_email}

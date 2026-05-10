@@ -74,3 +74,10 @@ export async function savePreferences(interested, disqualified) {
   });
   return response.data;
 }
+
+// ── Send meeting invite ───────────────────────────────────────────────────────
+
+export async function sendMeetingInvite(dealId) {
+  const response = await axios.post(`${API_URL}/deals/${dealId}/invite`);
+  return response.data;
+}

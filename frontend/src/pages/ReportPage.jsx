@@ -39,8 +39,10 @@ function computeTraceabilityMetrics(report) {
   };
 }
 
-export default function ReportPage({ report, filename, onNavigate }) {
-  const [copied, setCopied] = useState(false);
+export default function ReportPage({ report, reportId, filename, onNavigate }) {
+  const [inviting, setInviting] = useState(false);
+  const [inviteSent, setInviteSent] = useState(false);
+  const [inviteError, setInviteError] = useState(null);
   
   // Array of section IDs that match the <section id="..."> tags
   const sectionIds = ['scorecard', 'founder', 'claims', 'competitors', 'questions'];
@@ -57,10 +59,19 @@ export default function ReportPage({ report, filename, onNavigate }) {
     window.print();
   };
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleMeetingInvite = async () => {
+    if (!reportId || inviting || inviteSent) return;
+    setInviting(true);
+    setInviteError(null);
+    try {
+      const { sendMeetingInvite } = await import('../api/dashboard');
+      await sendMeetingInvite(reportId);
+      setInviteSent(true);
+    } catch (err) {
+      setInviteError(err.response?.data?.detail || 'Failed to send invite.');
+    } finally {
+      setInviting(false);
+    }
   };
 
   return (
@@ -108,9 +119,16 @@ export default function ReportPage({ report, filename, onNavigate }) {
 
               {/* Actions */}
               <div className="flex flex-col gap-2">
-                <Button variant="primary" onClick={handleShare}>
-                  {copied ? '✓ Link Copied' : 'Share Report'}
+                <Button
+                  variant="primary"
+                  onClick={handleMeetingInvite}
+                  disabled={inviting || inviteSent}
+                >
+                  {inviteSent ? '✓ Invite Sent' : inviting ? 'Sending...' : 'Request Meeting'}
                 </Button>
+                {inviteError && (
+                  <p className="text-[10px] font-mono text-verdict-red-text">{inviteError}</p>
+                )}
                 <Button variant="ghost" onClick={handleExportPDF}>
                   Export PDF
                 </Button>

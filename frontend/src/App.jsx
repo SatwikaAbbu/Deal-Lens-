@@ -147,6 +147,7 @@ function ReportRouteWrapper({ liveReport, activeSection, handleNavigate }) {
   return (
     <ReportPage 
       report={reportData}
+      reportId={id}
       filename={reportData.file_name || "report.pdf"}
       activeSection={activeSection}
       onNavigate={handleNavigate}

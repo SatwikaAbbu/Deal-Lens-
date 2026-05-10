@@ -186,52 +186,46 @@ function DealCard({ deal, onStatusChange, onDetailedReport, analyzing, index, on
       </div>
 
       {/* Actions Section */}
-      <div className="mt-5 pt-4 border-t border-border-subtle flex items-center gap-2 relative z-10">
+      <div className="mt-5 pt-4 border-t border-border-subtle flex items-center gap-1.5 relative z-10">
         {deal.status !== 'accepted' && (
           <button
             onClick={() => onStatusChange(deal.id, 'accepted')}
-            className="action-btn action-btn-accept flex-1"
+            className="action-btn action-btn-accept flex-1 whitespace-nowrap"
             title="Accept"
           >
             <Icon name="CheckCircle2" className="w-4 h-4" />
+            <span className="hidden sm:inline">Accept</span>
           </button>
         )}
         {deal.status !== 'rejected' && (
           <button
             onClick={() => onStatusChange(deal.id, 'rejected')}
-            className="action-btn action-btn-reject flex-1"
+            className="action-btn action-btn-reject flex-1 whitespace-nowrap"
             title="Reject"
           >
             <Icon name="XCircle" className="w-4 h-4" />
+            <span className="hidden sm:inline">Reject</span>
           </button>
         )}
         {deal.status !== 'favourite' && (
           <button
             onClick={() => onStatusChange(deal.id, 'favourite')}
-            className="action-btn action-btn-favourite flex-1"
+            className="action-btn action-btn-favourite flex-1 whitespace-nowrap"
             title="Favourite"
           >
             <Icon name="Star" className="w-4 h-4" />
-          </button>
-        )}
-        {deal.status !== 'disqualified' && (
-          <button
-            onClick={() => onStatusChange(deal.id, 'disqualified')}
-            className="action-btn action-btn-disqualified flex-1"
-            title="Disqualify"
-          >
-            <Icon name="Ban" className="w-4 h-4" />
+            <span className="hidden sm:inline">Fav</span>
           </button>
         )}
         <button
           onClick={() => onDetailedReport(deal.id)}
           disabled={analyzing === deal.id}
-          className="action-btn action-btn-primary flex-[3]"
+          className="action-btn action-btn-primary flex-[1.5] whitespace-nowrap"
         >
           {analyzing === deal.id ? (
             <>
               <Icon name="Loader2" className="w-4 h-4 animate-spin" />
-              <span>Analyzing</span>
+              <span className="text-[10px]">Analyzing</span>
             </>
           ) : (
             <>

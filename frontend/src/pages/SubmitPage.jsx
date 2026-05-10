@@ -54,34 +54,25 @@ export default function SubmitPage() {
             Pitch Deck Submitted!
           </h1>
           <p className="text-text-secondary font-sans mb-6">
-            Your pitch deck for <span className="text-accent-light font-semibold">{result.startup_name}</span> has been received and categorized as <span className="text-accent-light font-semibold">{result.category}</span>.
+            Your pitch deck for <span className="text-accent-light font-semibold">{result.startup_name}</span> has been securely received.
           </p>
 
-          <div className="bg-bg-surface border border-border-standard rounded-xl p-5 text-left space-y-3">
-            <div className="flex justify-between">
-              <span className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Status</span>
-              <span className={`text-[11px] font-mono font-bold uppercase px-2 py-0.5 rounded-full border ${
-                result.status === 'inbox'
-                  ? 'text-verdict-green-text bg-verdict-green-bg border-verdict-green-border'
-                  : 'text-verdict-amber-text bg-verdict-amber-bg border-verdict-amber-border'
-              }`}>
-                {result.status}
-              </span>
+          <div className="bg-bg-surface border border-border-standard rounded-xl p-6 text-center space-y-4">
+            <div className="flex justify-center mb-2">
+               <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+               </svg>
             </div>
-            <div className="flex justify-between">
-              <span className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Category</span>
-              <span className="text-sm font-sans text-text-primary">{result.category}</span>
-            </div>
-            {result.short_description && (
-              <div>
-                <span className="text-[11px] font-mono text-text-muted uppercase tracking-wider block mb-1">Summary</span>
-                <p className="text-sm font-sans text-text-secondary">{result.short_description}</p>
-              </div>
-            )}
+            <p className="text-sm font-sans text-text-primary">
+              A confirmation email has been sent to your inbox.
+            </p>
+            <p className="text-xs font-sans text-text-secondary leading-relaxed">
+              Our team (and our internal analysis system) is currently reviewing your materials. We will reach out regarding next steps if there is a strong fit.
+            </p>
           </div>
 
-          <p className="text-xs font-mono text-text-faint mt-6">
-            The investor will review your submission shortly.
+          <p className="text-xs font-mono text-text-faint mt-8">
+            You may now close this window.
           </p>
         </div>
       </div>
@@ -215,7 +206,7 @@ export default function SubmitPage() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                Analyzing deck...
+                Submitting...
               </span>
             ) : (
               'Submit Pitch Deck'

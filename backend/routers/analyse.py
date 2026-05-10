@@ -206,20 +206,68 @@ async def analyse_deck(file: Annotated[UploadFile, File(description="Pitch deck 
     return report_data
 
 
-# ── POST /submit-deck (Fast Triage) ────────────────────────────────────────────
+# ── Background Tasks ─────────────────────────────────────────────────────────
+
+async def process_triage_and_email(pdf_bytes: bytes, filename: str, founder_email: str, startup_name_input: str, report_id: str):
+    try:
+        from pipeline.extractor import extract_text
+        from pipeline.claim_parser import extract_claims
+        from services.email_service import send_investor_acknowledgement
+        
+        logger.info(f"[submit_bg] Starting background triage for '{filename}'...")
+        raw_text = await extract_text(pdf_bytes)
+        extraction_input = raw_text if raw_text.strip() else pdf_bytes
+
+        logger.info("[submit_bg] Running F1 extraction for category + description...")
+        claims = await extract_claims(extraction_input)
+        
+        category = claims.get("category", "Other")
+        short_description = claims.get("short_description", "")
+        ai_startup_name = claims.get("startup_name", "Unknown")
+        final_startup_name = startup_name_input if startup_name_input else ai_startup_name
+
+        prefs = await get_preferences()
+        interested_cats = [c.lower() for c in prefs.get("interested_categories", [])]
+        disqualified_cats = [c.lower() for c in prefs.get("disqualified_categories", [])]
+        
+        if category.lower() in disqualified_cats:
+            status = "disqualified"
+        elif len(interested_cats) > 0 and category.lower() not in interested_cats:
+            status = "rejected"
+        else:
+            status = "inbox"
+
+        await update_report_data(report_id, {
+            "startup_name": final_startup_name,
+            "category": category,
+            "short_description": short_description,
+            "status": status,
+            "report": {"claims": claims},
+            "raw_text": raw_text if isinstance(raw_text, str) else "",
+        })
+        
+        logger.info(f"[submit_bg] Triage complete. ID: {report_id}, Status: {status}")
+
+        if founder_email:
+            await send_investor_acknowledgement(founder_email, final_startup_name)
+
+    except Exception as e:
+        logger.error(f"[submit_bg] Background triage failed: {e}")
+
+# ── POST /submit-deck (Zero-Wait) ──────────────────────────────────────────────
+
+from fastapi import BackgroundTasks
 
 @router.post("/submit-deck")
 async def submit_deck(
+    background_tasks: BackgroundTasks,
     file: Annotated[UploadFile, File(description="Pitch deck PDF, max 20MB")],
     founder_email: str = Form(""),
     startup_name_input: str = Form(""),
 ):
     """
-    Fast triage endpoint for the public founder submission form.
-    1. Extracts text from the PDF
-    2. Runs F1 claim extraction (gets category + short_description)
-    3. Checks investor preferences
-    4. Saves as 'inbox' or 'disqualified' based on category match
+    Zero-wait endpoint for the public founder submission form.
+    Returns immediately while extraction, triage, and email run in the background.
     """
     filename = file.filename or ""
     if not filename.lower().endswith(".pdf"):
@@ -231,58 +279,35 @@ async def submit_deck(
     if len(pdf_bytes) == 0:
         raise HTTPException(status_code=422, detail="Uploaded file is empty.")
 
-    # Step 1: Extract text
-    logger.info(f"[submit] Starting fast triage for '{filename}'...")
-    from pipeline.extractor import extract_text
-    raw_text = await extract_text(pdf_bytes)
-    extraction_input = raw_text if raw_text.strip() else pdf_bytes
-
-    # Step 2: Extract claims (F1 only — fast, ~5 seconds)
-    logger.info("[submit] Running F1 extraction for category + description...")
-    from pipeline.claim_parser import extract_claims
-    claims = await extract_claims(extraction_input)
-
-    category = claims.get("category", "Other")
-    short_description = claims.get("short_description", "")
-    ai_startup_name = claims.get("startup_name", "Unknown")
-    final_startup_name = startup_name_input if startup_name_input else ai_startup_name
-
-    # Step 3: Check investor preferences for auto-triage
-    prefs = await get_preferences()
-    interested_cats = [c.lower() for c in prefs.get("interested_categories", [])]
-    disqualified_cats = [c.lower() for c in prefs.get("disqualified_categories", [])]
-    
-    if category.lower() in disqualified_cats:
-        status = "disqualified"
-        logger.info(f"[submit] Category '{category}' is disqualified. Auto-disqualifying.")
-    elif len(interested_cats) > 0 and category.lower() not in interested_cats:
-        status = "rejected"
-        logger.info(f"[submit] Category '{category}' is not in interested list {interested_cats}. Auto-rejecting.")
-    else:
-        status = "inbox"
-        logger.info(f"[submit] Category '{category}' passes filter. Moving to inbox.")
-
-    # Step 4: Save the stub to Supabase
+    # Save initial pending stub immediately
     submission_data = {
-        "startup_name": final_startup_name,
+        "startup_name": startup_name_input or "Processing...",
         "file_name": filename,
-        "report": {"claims": claims},
-        "status": status,
-        "category": category,
-        "short_description": short_description,
+        "report": {"claims": {}},
+        "status": "pending",
+        "category": "Processing...",
+        "short_description": "We are extracting details from your deck.",
         "founder_email": founder_email,
-        "raw_text": raw_text if isinstance(raw_text, str) else "",
+        "raw_text": "",
     }
     
     report_id = await save_submission(submission_data)
     
-    logger.info(f"[submit] Submission saved. ID: {report_id}, Status: {status}")
+    background_tasks.add_task(
+        process_triage_and_email,
+        pdf_bytes,
+        filename,
+        founder_email,
+        startup_name_input,
+        report_id
+    )
+    
+    logger.info(f"[submit] Zero-wait submission accepted. ID: {report_id}. Processing in background.")
     return {
+        "success": True,
         "report_id": report_id,
-        "startup_name": final_startup_name,
-        "category": category,
-        "short_description": short_description,
-        "status": status,
+        "startup_name": startup_name_input or "Your Startup",
+        "status": "pending",
     }
 
 
