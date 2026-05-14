@@ -15,6 +15,7 @@ Temperature is always 0.1 for analytical consistency (matches Gemini config).
 import os
 import logging
 import asyncio
+# pyrefly: ignore [missing-import]
 from openai import OpenAI
 
 logger = logging.getLogger(__name__)
